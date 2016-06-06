@@ -1,7 +1,7 @@
 export default
 /*@ngInject*/
 function aListModel($resource, API) {
-  var resource = $resource(API + '/lists/:_id/:method', {
+  var resource = $resource(API + '/list/:_id/:method', {
     '_id': '@_id'
   }, {
     'get': {method: 'GET'},

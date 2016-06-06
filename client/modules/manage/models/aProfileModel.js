@@ -1,8 +1,8 @@
 export default
 /*@ngInject*/
 function aProfileModel($resource, API) {
-  var resource = $resource(API + '/profile/:_id/:method', {
-    '_id': '@_id'
+  var resource = $resource(API + '/profile/:profileId/:method', {
+    'profileId': '@profileId'
   }, {
     'get': {method: 'GET'},
     'save': {method: 'PUT'},

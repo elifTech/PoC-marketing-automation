@@ -1,0 +1,31 @@
+<div class="page-header">
+
+    <h1>
+        Profiles
+    </h1>
+
+    <div class="page-actions">
+
+        <a href="" class="btn btn-primary" ui-sref="main.profile.edit">Add new</a>
+
+    </div>
+</div>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>List</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="profile in profiles track by $index">
+        <td>
+            <a href="#" ui-sref="main.profile.edit({ _id: profile._key })">{{profile.name}}</a>
+        </td>
+        <td>
+            <a href="#" ui-sref="removeList(profile._key)">Remove</a>
+        </td>
+    </tr>
+    </tbody>
+</table>

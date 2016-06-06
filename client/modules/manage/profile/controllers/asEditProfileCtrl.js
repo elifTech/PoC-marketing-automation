@@ -1,12 +1,12 @@
 export default
 /*@ngInject*/
-function($scope, $timeout, aListModel, $stateParams) {
+function($scope, $timeout, aProfileModel, $stateParams) {
     $scope.listName = "";
     console.log('$stateParams', $stateParams);
 
     $scope.saveItem = (listItem => {
         $scope.loading = true;
-        var promise = aListModel.create({name: aListModel}, (response) => {
+        var promise = aProfileModel.create({name: listItem}, (response) => {
             console.log('response', response);
             
         }, err => {
@@ -17,14 +17,14 @@ function($scope, $timeout, aListModel, $stateParams) {
 
         console.log(listItem, 'listItem');
     });
-
+    
     $scope.find = _id => {
-        aListModel.get({_id: _id},
+        aProfileModel.get({profileId: _id},
         response => {
             $scope.listItem = response;
         },
         err => {
-            console.log('error on get list', err);
+            console.log('error on get profile', err);
         });
     };
 
