@@ -7,8 +7,6 @@ var express = require('express'),
     serveStatic = require('serve-static'),
     async = require('async');
 
-var profiles = require('../data_layer/profiles');
-
 var app = {
     config: {
         http: {
@@ -16,7 +14,7 @@ var app = {
         }
     },
     models: {
-        // parking: require('./models/parking.js')
+        profiles: require('../data_layer/profiles')
     }
 };
 exports.app = app;
@@ -61,7 +59,7 @@ exports.start = function(next) {
     });
 
     app.server.get('/api/profile', function(req, res, next){
-        profiles.getAllProfiles()
+        app.models.profiles.getAllProfiles()
             .then( (profiles) => res.json({ items: profiles }) )
             .catch( (err) =>{
                 console.log(err);
