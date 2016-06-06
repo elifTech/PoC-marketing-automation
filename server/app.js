@@ -14,7 +14,8 @@ var app = {
         }
     },
     models: {
-        profiles: require('../data_layer/profiles')
+        profiles: require('../data_layer/profiles'),
+        lists: require('../data_layer/lists')
     }
 };
 exports.app = app;
@@ -58,8 +59,52 @@ exports.start = function(next) {
         res.json({ success: true });
     });
 
+    app.server.get('/api/list', function(req, res, next){
+        app.models.lists.getAllLists()
+            .then( (profiles) => res.json({ items: profiles }) )
+            .catch( (err) =>{
+                console.log(err);
+                res.statusCode(400).send(err)
+            });
+    });
+
+    app.server.delete('/api/list/:listId', function(req, res, next){
+        app.models.lists.removeList(req.params.listId)
+            .then( (profiles) => res.send({}) )
+            .catch( (err) =>{
+                console.log(err);
+                res.statusCode(400).send(err)
+            });
+
+    });
+
+    app.server.post('/api/list', function(req, res, next){
+        var list = req.body;
+        app.models.lists.insertList(list)
+            .then( (profile) => res.send(profile) )
+            .catch( (err) =>{
+                console.log(err);
+                res.statusCode(400).send(err)
+            });
+
+    });
+
+    app.server.put('/api/list/:listIdId', function(req, res, next){
+        var list = req.body;
+        list._key = req.params.listIdId;
+        app.models.lists.updateList(list)
+            .then( (profile) => res.send(profile) )
+            .catch( (err) =>{
+                console.log(err);
+                res.statusCode(400).send(err);
+            });
+
+    });
+
+
+
     app.server.get('/api/profile', function(req, res, next){
-        app.models.profiles.getAllProfiles()
+        app.models.profiles.getAllLists()
             .then( (profiles) => res.json({ items: profiles }) )
             .catch( (err) =>{
                 console.log(err);
