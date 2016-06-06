@@ -27,6 +27,7 @@ function($scope, $timeout, aListModel, $stateParams) {
            console.log('error on get list', err);
         });
     };
+    
 
     if($stateParams._id) $scope.find($stateParams._id);
 }
