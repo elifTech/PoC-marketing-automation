@@ -67,12 +67,47 @@ exports.start = function(next) {
         });
 
     });
+
+    app.server.delete('/api/profile/:profileId', function(req, res, next){
+        app.models.profiles.removeProfile(req.params.profileId)
+            .then( (profiles) => res.send({}) )
+            .catch( (err) =>{
+                console.log(err);
+                res.sendStatus(500);
+            });
+
+    });
+
+    app.server.post('/api/profile', function(req, res, next){
+        var profile = req.body;
+        app.models.profiles.insertProfile(profile)
+            .then( (profile) => res.send(profile) )
+            .catch( (err) =>{
+                console.log(err);
+                res.sendStatus(500);
+            });
+
+    });
+
+    app.server.put('/api/profile/:profileId', function(req, res, next){
+        var profile = req.body;
+        profile._key = req.params.profileId;
+        app.models.profiles.updateProfile(profile)
+            .then( (profile) => res.send(profile) )
+            .catch( (err) =>{
+                console.log(err);
+                res.sendStatus(500);
+            });
+
+    });
+
+
     app.server.get('/*', serveStatic(__dirname + '/..', {etag: false}));
 
     app.server.use(function (err, req, res, next) {
         if (err) {
             var isDev = 'development';
-
+            console.log(err);
             req.log.error({err: {name: err.name, stack: err.stack}}, err.message);
             if (err.name === app.errors.NotFoundError.name) {
                 var resultErr = {msg: err.message};
