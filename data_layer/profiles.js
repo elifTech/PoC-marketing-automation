@@ -2,6 +2,20 @@ var db = require('./config').db;
 var aql = require('arangojs').aql;
 var profilesCollection = db.collection('profiles');
 var Promise = require('bluebird');
+var validate = require('jsonschema').validate;
+var validationOptions = {
+    throwError: true
+}
+
+var profileSchema = {
+    "id": "/Profile",
+    "type": "object",
+    "properties": {
+        "email": {"type": "string"},
+        "name": {"type": "string"}
+    },
+    "required": ["email"]
+};
 
 function getAllProfiles(){
     return db.query(aql`
@@ -12,6 +26,7 @@ function getAllProfiles(){
 }
 
 function insertProfile(profile){
+    validate(profile, profileSchema, validationOptions);
     return db.query(aql`
         INSERT ${profile}
         IN ${profilesCollection}
@@ -22,6 +37,7 @@ function insertProfile(profile){
 }
 
 function updateProfile(profile){
+    validate(profile, profileSchema, validationOptions);
     return db.query(aql`
         UPDATE {_key: ${profile._key}}
         WITH ${profile}

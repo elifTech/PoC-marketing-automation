@@ -63,7 +63,7 @@ exports.start = function(next) {
             .then( (profiles) => res.json({ items: profiles }) )
             .catch( (err) =>{
                 console.log(err);
-                res.sendStatus(500);
+                res.statusCode(400).send(err)
         });
 
     });
@@ -73,7 +73,7 @@ exports.start = function(next) {
             .then( (profiles) => res.send({}) )
             .catch( (err) =>{
                 console.log(err);
-                res.sendStatus(500);
+                res.statusCode(400).send(err)
             });
 
     });
@@ -84,7 +84,7 @@ exports.start = function(next) {
             .then( (profile) => res.send(profile) )
             .catch( (err) =>{
                 console.log(err);
-                res.sendStatus(500);
+                res.statusCode(400).send(err)
             });
 
     });
@@ -96,7 +96,7 @@ exports.start = function(next) {
             .then( (profile) => res.send(profile) )
             .catch( (err) =>{
                 console.log(err);
-                res.sendStatus(500);
+                res.statusCode(400).send(err);
             });
 
     });
@@ -107,27 +107,28 @@ exports.start = function(next) {
     app.server.use(function (err, req, res, next) {
         if (err) {
             var isDev = 'development';
-            console.log(err);
-            req.log.error({err: {name: err.name, stack: err.stack}}, err.message);
-            if (err.name === app.errors.NotFoundError.name) {
-                var resultErr = {msg: err.message};
-                if (isDev) {
-                    resultErr.stack = err.stack;
-                }
-                return res.status(404).json(resultErr);
-            } else if (err.name === app.errors.ValidationError.name) {
-                var r = {hasErrors: true};
-                if (err.field) {
-                    r.fieldErrors = [{field: err.field, msg: err.msg}];
-                } else {
-                    r.summaryErrors = [{msg: err.msg}];
-                }
-                return res.status(422).json(r);
-            } else if (err.name === app.errors.OperationError.name) {
-                return res.status(400).json({msg: err.message});
-            } else if (err.name === 'Error') {
-                return res.status(500).json({errors: err.errors, code: err.code});
-            }
+
+            console.log({err: {name: err.name, stack: err.stack}}, err.message);
+            return res.status(400).json({msg: err.message});
+            //if (err.name === app.errors.NotFoundError.name) {
+            //    var resultErr = {msg: err.message};
+            //    if (isDev) {
+            //        resultErr.stack = err.stack;
+            //    }
+            //    return res.status(404).json(resultErr);
+            //} else if (err.name === app.errors.ValidationError.name) {
+            //    var r = {hasErrors: true};
+            //    if (err.field) {
+            //        r.fieldErrors = [{field: err.field, msg: err.msg}];
+            //    } else {
+            //        r.summaryErrors = [{msg: err.msg}];
+            //    }
+            //    return res.status(422).json(r);
+            //} else if (err.name === app.errors.OperationError.name) {
+            //    return res.status(400).json({msg: err.message});
+            //} else if (err.name === 'Error') {
+            //    return res.status(500).json({errors: err.errors, code: err.code});
+            //}
             return next(err);
         }
         next();
