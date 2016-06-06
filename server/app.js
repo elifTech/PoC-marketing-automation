@@ -14,7 +14,7 @@ var app = {
         }
     },
     models: {
-        // parking: require('./models/parking.js')
+        profiles: require('../data_layer/profiles')
     }
 };
 exports.app = app;
@@ -58,32 +58,77 @@ exports.start = function(next) {
         res.json({ success: true });
     });
 
+    app.server.get('/api/profile', function(req, res, next){
+        app.models.profiles.getAllProfiles()
+            .then( (profiles) => res.json({ items: profiles }) )
+            .catch( (err) =>{
+                console.log(err);
+                res.statusCode(400).send(err)
+        });
+
+    });
+
+    app.server.delete('/api/profile/:profileId', function(req, res, next){
+        app.models.profiles.removeProfile(req.params.profileId)
+            .then( (profiles) => res.send({}) )
+            .catch( (err) =>{
+                console.log(err);
+                res.statusCode(400).send(err)
+            });
+
+    });
+
+    app.server.post('/api/profile', function(req, res, next){
+        var profile = req.body;
+        app.models.profiles.insertProfile(profile)
+            .then( (profile) => res.send(profile) )
+            .catch( (err) =>{
+                console.log(err);
+                res.statusCode(400).send(err)
+            });
+
+    });
+
+    app.server.put('/api/profile/:profileId', function(req, res, next){
+        var profile = req.body;
+        profile._key = req.params.profileId;
+        app.models.profiles.updateProfile(profile)
+            .then( (profile) => res.send(profile) )
+            .catch( (err) =>{
+                console.log(err);
+                res.statusCode(400).send(err);
+            });
+
+    });
+
+
     app.server.get('/*', serveStatic(__dirname + '/..', {etag: false}));
 
     app.server.use(function (err, req, res, next) {
         if (err) {
             var isDev = 'development';
 
-            console.error({err: {name: err.name, stack: err.stack}}, err.message);
-            if (err.name === app.errors.NotFoundError.name) {
-                var resultErr = {msg: err.message};
-                if (isDev) {
-                    resultErr.stack = err.stack;
-                }
-                return res.status(404).json(resultErr);
-            } else if (err.name === app.errors.ValidationError.name) {
-                var r = {hasErrors: true};
-                if (err.field) {
-                    r.fieldErrors = [{field: err.field, msg: err.msg}];
-                } else {
-                    r.summaryErrors = [{msg: err.msg}];
-                }
-                return res.status(422).json(r);
-            } else if (err.name === app.errors.OperationError.name) {
-                return res.status(400).json({msg: err.message});
-            } else if (err.name === 'Error') {
-                return res.status(500).json({errors: err.errors, code: err.code});
-            }
+            console.log({err: {name: err.name, stack: err.stack}}, err.message);
+            return res.status(400).json({msg: err.message});
+            //if (err.name === app.errors.NotFoundError.name) {
+            //    var resultErr = {msg: err.message};
+            //    if (isDev) {
+            //        resultErr.stack = err.stack;
+            //    }
+            //    return res.status(404).json(resultErr);
+            //} else if (err.name === app.errors.ValidationError.name) {
+            //    var r = {hasErrors: true};
+            //    if (err.field) {
+            //        r.fieldErrors = [{field: err.field, msg: err.msg}];
+            //    } else {
+            //        r.summaryErrors = [{msg: err.msg}];
+            //    }
+            //    return res.status(422).json(r);
+            //} else if (err.name === app.errors.OperationError.name) {
+            //    return res.status(400).json({msg: err.message});
+            //} else if (err.name === 'Error') {
+            //    return res.status(500).json({errors: err.errors, code: err.code});
+            //}
             return next(err);
         }
         next();

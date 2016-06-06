@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/elifTech/PoC-marketing-automation#readme",
   "dependencies": {
+    "arangojs": "^4.5.0",
+    "bluebird": "^3.4.0",
     "body-parser": "^1.15.1",
     "convict": "^1.4.0",
     "cors": "^2.7.1",
@@ -26,6 +28,7 @@
     "gulp-concat": "^2.6.0",
     "gulp-connect": "^4.0.0",
     "http": "0.0.0",
+    "jsonschema": "^1.1.0",
     "lodash": "^4.13.1",
     "path": "^0.12.7",
     "rollup-plugin-commonjs": "^2.2.1",
