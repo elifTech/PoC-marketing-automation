@@ -5,6 +5,8 @@ var express = require('express'),
     bodyParser = require('body-parser'),
     async = require('async');
 
+var profiles = require('../data_layer/profiles');
+
 var app = {
     config: {
         http: {
@@ -54,6 +56,16 @@ exports.start = function(next) {
 
     app.server.get('/api', function(req, res, next){
         res.json({ success: true });
+    });
+
+    app.server.get('/api/profile', function(req, res, next){
+        profiles.getAllProfiles()
+            .then( (profiles) => res.json({ items: profiles }) )
+            .catch( (err) =>{
+                console.log(err);
+                res.sendStatus(500);
+        });
+
     });
     
     app.httpServer.listen(app.config.http.port, next);
