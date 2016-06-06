@@ -1,0 +1,41 @@
+{
+  "name": "poc-marketing-automation",
+  "version": "1.0.0",
+  "description": "Marketins app",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/elifTech/PoC-marketing-automation.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/elifTech/PoC-marketing-automation/issues"
+  },
+  "homepage": "https://github.com/elifTech/PoC-marketing-automation#readme",
+  "dependencies": {
+    "body-parser": "^1.15.1",
+    "convict": "^1.4.0",
+    "cors": "^2.7.1",
+    "express": "^4.13.4",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2",
+    "gulp-concat": "^2.6.0",
+    "gulp-connect": "^4.0.0",
+    "gulp-develop-server": "^0.5.2",
+    "gulp-ng-annotate": "^2.0.0",
+    "gulp-replace": "^0.5.4",
+    "gulp-rollup": "^1.9.0",
+    "gulp-sourcemaps": "^1.6.0",
+    "gulp-uglify": "^1.5.3",
+    "http": "0.0.0",
+    "lodash": "^4.13.1",
+    "path": "^0.12.7",
+    "rollup-plugin-commonjs": "^2.2.1",
+    "rollup-plugin-node-resolve": "^1.5.0"
+  }
+}
