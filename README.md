@@ -3,6 +3,7 @@
 ## To start project
 - npm i
 - sudo npm i gulp -g
+- bower i
 - gulp
 
 ## To test
