@@ -1,8 +1,10 @@
 var express = require('express'),
     http = require('http'),
-    path = require('path'),
+    url = require('url'),
+    fs = require('fs'),
     cors = require('cors'),
     bodyParser = require('body-parser'),
+    serveStatic = require('serve-static'),
     async = require('async');
 
 var profiles = require('../data_layer/profiles');
@@ -67,7 +69,71 @@ exports.start = function(next) {
         });
 
     });
-    
+    app.server.get('/*', serveStatic(__dirname + '/..', {etag: false}));
+
+    app.server.use(function (err, req, res, next) {
+        if (err) {
+            var isDev = 'development';
+
+            req.log.error({err: {name: err.name, stack: err.stack}}, err.message);
+            if (err.name === app.errors.NotFoundError.name) {
+                var resultErr = {msg: err.message};
+                if (isDev) {
+                    resultErr.stack = err.stack;
+                }
+                return res.status(404).json(resultErr);
+            } else if (err.name === app.errors.ValidationError.name) {
+                var r = {hasErrors: true};
+                if (err.field) {
+                    r.fieldErrors = [{field: err.field, msg: err.msg}];
+                } else {
+                    r.summaryErrors = [{msg: err.msg}];
+                }
+                return res.status(422).json(r);
+            } else if (err.name === app.errors.OperationError.name) {
+                return res.status(400).json({msg: err.message});
+            } else if (err.name === 'Error') {
+                return res.status(500).json({errors: err.errors, code: err.code});
+            }
+            return next(err);
+        }
+        next();
+    });
+
+    app.server.use(
+        function (req, res, next) {
+            var indexFile = "index.html", rootDir = '.';
+            var path = url.parse(req.url).pathname;
+
+            if(/^\/api/.test(path)) return next();
+
+            return fs.readFile('./' + rootDir + path, function (err, buf) {
+                if (!err) {
+                    return next();
+                }
+                if (path.substring(path.length - 4) == 'html') { // if html file not found
+                    res.writeHead(404);
+                    return res.end('Not found');
+                }
+                return fs.readFile('./' + rootDir + '/' + indexFile, function (error, buffer) {
+                    var resp;
+                    if (error) {
+                        return next(error);
+                    }
+                    resp = {
+                        headers: {
+                            'Content-Type': 'text/html',
+                            'Content-Length': buffer.length
+                        },
+                        body: buffer
+                    };
+                    res.writeHead(200, resp.headers);
+                    return res.end(resp.body);
+                });
+            });
+        }
+    );
+
     app.httpServer.listen(app.config.http.port, next);
 
     console.info('Start listening on port: ', app.config.http.port);
