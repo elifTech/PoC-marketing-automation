@@ -13,7 +13,7 @@ function($stateProvider, $urlRouterProvider) {
         .state('main.lists', {
             url: '/lists',
             resolve: {
-                // lists: (aListModel) => aListModel.list({page: 1, limit: 100}).$promise
+                // lists: (aListModel) => aListModel.get().$promise
             },
             views: {
                 'main-content': {controller: 'asListCtrl', templateUrl: 'client/views/main/page.html'}

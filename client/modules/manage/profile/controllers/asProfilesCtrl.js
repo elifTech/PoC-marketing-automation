@@ -9,6 +9,9 @@ function($scope, profiles, $timeout, aProfileModel) {
     $scope.removeProfile = _id => {
         aProfileModel.delete({profileId: _id}, response => {
             console.log('remove list item OK', response);
+            aProfileModel.get(profiles => {
+                $scope.profiles = profiles.items;
+            });
         },
         err => {
            console.log('remove list item', err);

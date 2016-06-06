@@ -1,24 +1,29 @@
-<form name="userForm" ng-submit="submitForm(userForm.$valid)" novalidate> <!-- novalidate prevents HTML5 validation since we will be validating ourselves -->
+<form name="userForm" ng-submit="saveItem(userForm)" novalidate> <!-- novalidate prevents HTML5 validation since we will be validating ourselves -->
 
     <!-- NAME -->
     <div class="form-group">
-        <label>Name</label>
-        <input type="text" name="name" class="form-control" ng-model="name" required>
+        <label>First Name</label>
+        <input type="text" name="firstname" class="form-control" ng-model="profile.firstname"  ng-minlength="2" required>
+    </div>
+    <!-- NAME -->
+    <div class="form-group">
+        <label>Last Name</label>
+        <input type="text" name="lastname" class="form-control" ng-model="profile.lastname"  ng-minlength="2" required>
     </div>
 
     <!-- USERNAME -->
     <div class="form-group">
-        <label>Username</label>
-        <input type="text" name="username" class="form-control" ng-model="user.username" ng-minlength="3" ng-maxlength="8">
+        <label>Interests</label>
+        <input type="text" name="interests" class="form-control" ng-model="profile.interests" ng-minlength="3">
     </div>
 
     <!-- EMAIL -->
     <div class="form-group">
         <label>Email</label>
-        <input type="email" name="email" class="form-control" ng-model="email">
+        <input type="email" name="email" class="form-control" required ng-model="profile.email">
     </div>
 
     <!-- SUBMIT BUTTON -->
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="submit" class="btn btn-primary" ng-disabled="!userForm.$valid">Submit</button>
 
 </form>

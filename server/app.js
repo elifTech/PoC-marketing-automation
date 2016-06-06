@@ -63,8 +63,8 @@ exports.start = function(next) {
         app.models.lists.getAllLists()
             .then( (profiles) => res.json({ items: profiles }) )
             .catch( (err) =>{
-                console.log(err);
-                res.statusCode(400).send(err)
+                if(err) return next(err);
+                res.statusCode(err.code || 400).send(err)
             });
     });
 
@@ -89,9 +89,9 @@ exports.start = function(next) {
 
     });
 
-    app.server.put('/api/list/:listIdId', function(req, res, next){
+    app.server.put('/api/list/:listId', function(req, res, next){
         var list = req.body;
-        list._key = req.params.listIdId;
+        list._key = req.params.listId;
         app.models.lists.updateList(list)
             .then( (profile) => res.send(profile) )
             .catch( (err) =>{
@@ -104,7 +104,7 @@ exports.start = function(next) {
 
 
     app.server.get('/api/profile', function(req, res, next){
-        app.models.profiles.getAllLists()
+        app.models.profiles.getAllProfiles()
             .then( (profiles) => res.json({ items: profiles }) )
             .catch( (err) =>{
                 console.log(err);

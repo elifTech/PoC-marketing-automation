@@ -1,27 +1,37 @@
 export default
 /*@ngInject*/
 function($scope, $timeout, aProfileModel, $stateParams) {
-    $scope.listName = "";
+    $scope.profile = {};
     console.log('$stateParams', $stateParams);
 
-    $scope.saveItem = (listItem => {
+    $scope.saveItem = (profile => {
+        var sendData = {
+            name: profile.firstname.$viewValue + " " + profile.lastname.$viewValue,
+            email: profile.email.$viewValue,
+            interests: profile.interests.$viewValue
+        };
+
+        console.log('sendData', sendData);
+
+        var saveMethod = aProfileModel.create;
+        if($scope.profile._key) saveMethod = aProfileModel.save;
+
         $scope.loading = true;
-        var promise = aProfileModel.create({name: listItem}, (response) => {
+        saveMethod(sendData, (response) => {
             console.log('response', response);
-            
+            $scope.$close();
+            $scope.loading = false;
         }, err => {
             console.log('add error', err);
             $scope.$close();
             $scope.loading = false;
         });
-
-        console.log(listItem, 'listItem');
     });
     
     $scope.find = _id => {
         aProfileModel.get({profileId: _id},
         response => {
-            $scope.listItem = response;
+            $scope.profile = response;
         },
         err => {
             console.log('error on get profile', err);

@@ -24,7 +24,7 @@
             <a href="#" ui-sref="main.profile.edit({ _id: profile._key })">{{profile.name}}</a>
         </td>
         <td>
-            <a href="#" ui-sref="removeList(profile._key)">Remove</a>
+            <a href="javascript:void(0)" ng-click="removeProfile(profile._key)">Remove</a>
         </td>
     </tr>
     </tbody>
