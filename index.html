@@ -43,29 +43,12 @@
 </head>
 <body class="{{$state.current.data.specialClass}}" landing-scrollspy>
 
-<!-- Simple splash screen-->
-<div class="splash">
-    <div class="splash-title">
-        <h1>Welcome to the Platform</h1>
-
-        <div class="sk-spinner sk-spinner-wave">
-            <div class="sk-rect1"></div>
-            <div class="sk-rect2"></div>
-            <div class="sk-rect3"></div>
-            <div class="sk-rect4"></div>
-            <div class="sk-rect5"></div>
-        </div>
-
-    </div>
-</div>
-
 <!--[if lt IE 7]>
 <p class="alert alert-danger">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
 <![endif]-->
 
-<!-- Page view wrapper -->
-<div ui-view></div>
-<div base-popup-notifications></div>
+<div ui-view="dashboard"></div>
+
 
 <!-- build:js(.) scripts/vendor.js -->
 <script src="bower_components/jquery/dist/jquery.min.js"></script>
@@ -76,7 +59,6 @@
 <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
 <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 
-<script src="bower_components/angular-ui-utils/ui-utils.js"></script>
 <script src="bower_components/angular-ui-tree/dist/angular-ui-tree.min.js"></script>
 
 <script src="bower_components/angular-resource/angular-resource.js"></script>
@@ -89,7 +71,7 @@
 <script>
     angular.module('views', []);
 </script>
-<script src="build/app.js"></script>
+<script src="dist/init.js"></script>
 <!-- endbuild -->
 
 </body>

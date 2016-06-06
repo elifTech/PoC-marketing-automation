@@ -1,0 +1,16 @@
+<form name="editForm" model-state="error" submit="saveItem(listName)">
+  <div class="modal-header page-header">
+    <h3 class="modal-title" style="float: left;">New list</h3>
+  </div>
+  <div class="modal-body">
+    <loading ng-model="loading"></loading>
+      <input type="text" name="name" required class="form-control" ng-model="listName" />
+
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" type="submit" ng-disabled="!listName.length" ng-click="saveItem(listName)" >
+      Save
+    </button>
+    <button class="btn btn-secondary" type="button" ng-click="$close()">Close</button>
+  </div>
+</form>

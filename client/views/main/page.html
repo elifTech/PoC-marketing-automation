@@ -1,0 +1,31 @@
+<div class="page-header">
+
+    <h1>
+        Lists
+    </h1>
+
+    <div class="page-actions">
+
+        <a href="" class="btn btn-primary" ui-sref="main.lists.new-list">Add new</a>
+
+    </div>
+</div>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>List</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="list in lists track by $index">
+        <td>
+            <a href="#" ui-sref="manage.list.info({ listId: list._id })">{{list.name}}</a>
+        </td>
+        <td>
+            <a href="#" ui-sref="removeList(list._id)">Remove</a>
+        </td>
+    </tr>
+    </tbody>
+</table>

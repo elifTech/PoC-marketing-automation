@@ -64,7 +64,7 @@ exports.start = function(next) {
         if (err) {
             var isDev = 'development';
 
-            req.log.error({err: {name: err.name, stack: err.stack}}, err.message);
+            console.error({err: {name: err.name, stack: err.stack}}, err.message);
             if (err.name === app.errors.NotFoundError.name) {
                 var resultErr = {msg: err.message};
                 if (isDev) {

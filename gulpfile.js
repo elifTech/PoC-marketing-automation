@@ -25,7 +25,7 @@ var env = process.env.NODE_ENV || 'development',
 
 
 function build() {
-    return gulp.src("./server/init.js", {read: false})
+    return gulp.src("./client/init.js", {read: false})
         .pipe(rollup({
             sourceMap: true,
             plugins: [resolve({jsnext: true}), commonjs()]
@@ -46,8 +46,8 @@ gulp.task('compress', ['build'], function () {
 gulp.task('build', build);
 
 gulp.task('watch', ['server:start'], function () {
-    gulp.watch('app/**/*.js', ['build']);
-    gulp.watch('api/**/*.js', ['server:restart']);
+    gulp.watch('client/**/*.js', ['build']);
+    gulp.watch('server/**/*.js', ['server:restart']);
 });
 
 gulp.task('connect', ['watch'], function () {
