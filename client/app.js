@@ -12,6 +12,8 @@ try {
 
 window.config = config;
 
+var socket = io();
+
 angular.module(appName, [base].concat(modules));
 
 export default appName;

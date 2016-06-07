@@ -7,6 +7,7 @@ var express = require('express'),
     serveStatic = require('serve-static'),
     async = require('async');
 
+
 var app = {
     config: {
         http: {
@@ -39,6 +40,12 @@ exports.init = function (next) {
 exports.start = function(next) {
     app.server = express();
     app.httpServer = http.createServer(app.server);
+
+    var io = require('socket.io')(app.httpServer);
+    
+    io.on('connection', function(socket){
+        console.log('a user connected');
+    });
 
     var corsOptionsDelegate = function(req, callback){
         var corsOptions = {};
@@ -164,7 +171,6 @@ exports.start = function(next) {
             });
 
     });
-
 
     app.server.get('/*', serveStatic(__dirname + '/..', {etag: false}));
 
