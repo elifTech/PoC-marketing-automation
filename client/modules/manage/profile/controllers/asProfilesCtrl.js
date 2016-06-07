@@ -1,11 +1,9 @@
 export default
 /*@ngInject*/
-function($scope, profiles, $timeout, aProfileModel) {
+function($scope, profiles, $timeout, aProfileModel, socket) {
     // get sites list
     $scope.profiles = profiles.items || [];
-
-    var socket = io();
-
+    
     socket.on('profiles change', function(newData){
         $scope.profiles = newData;
         $scope.$apply();
