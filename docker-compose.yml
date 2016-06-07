@@ -5,7 +5,7 @@ arangodb:
   environment:
     - ARANGO_NO_AUTH=true
 web:
-  image: polluxx/PoC-marketing-automation
+  image: polluxx/poc-marketing-automation
   #build: .
   ports:
     - "5000:5000"
