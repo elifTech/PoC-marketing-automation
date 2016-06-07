@@ -6,7 +6,7 @@ function($scope, $timeout, aProfileModel, $stateParams) {
 
     $scope.saveItem = (profile => {
         $scope.profile.name = $scope.profile.firstname + " " + $scope.profile.lastname;
-        
+
         var saveMethod = aProfileModel.create;
         if($scope.profile._key) {
             $scope.profile.profileId = $scope.profile._key;
@@ -28,12 +28,12 @@ function($scope, $timeout, aProfileModel, $stateParams) {
     $scope.find = _id => {
         aProfileModel.get({profileId: _id},
         response => {
-            var userName = response.name.split(" ");
-            response.firstname = userName[0];
-            response.lastname = userName[1];
-            console.log('response.interests', response.interests);
-            response.interests = response.interests || []
-            $scope.profile = response;
+            var profile = response.profile;
+            var userName = profile.name.split(" ");
+            profile.firstname = userName[0];
+            profile.lastname = userName[1];
+            profile.interests = profile.interests || []
+            $scope.profile = profile;
         },
         err => {
             console.log('error on get profile', err);
