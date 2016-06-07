@@ -69,6 +69,8 @@ function insertList(list){
 
 function updateList(list){
     validate(list, listSchema, validationOptions);
+    var listResult;
+    var profileKeys = list.profiles;
     delete list.profiles;
 
     return db.query(aql`
@@ -78,7 +80,13 @@ function updateList(list){
         RETURN NEW
     `)
         .then(cursor => cursor.all() )
-        .then(data => data[0]);
+        .then(data => {
+            listResult = data[0];
+            return Promise.all(profileKeys.map((profileKey) => {
+                return edges.save({_from: "profiles/" + profileKey, _to: listResult._id});
+            }))
+        })
+        .then(() => listResult);
 }
 
 function removeList(listId){
