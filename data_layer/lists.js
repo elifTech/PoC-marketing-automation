@@ -68,7 +68,9 @@ function init(){
         { "name": "third"}
     ];
 
-    return listsCollection.create()
+    return Promise.all([listsCollection.drop(), graph.drop()])
+        .catch((err) => console.log("list collection didn't exist"))
+        .then(() => listsCollection.create())
         .then(() => Promise.all(lists.map(insertList)))
         .then(() => graph.create({
             edgeDefinitions: [

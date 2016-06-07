@@ -8,4 +8,7 @@ Promise.all([
     Lists.init()
 ])
     .catch(console.log)
-    .then(() => process.exit() )
+    .then(() => {
+        console.log("Finished");
+        process.exit()
+    })

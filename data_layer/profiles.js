@@ -62,7 +62,9 @@ function init(){
         { "name": "Sarach", "email":"test3@test.com" }
     ];
 
-    return profilesCollection.create()
+    return profilesCollection.drop()
+        .catch((err) => console.log("profiles collection didn't exist"))
+        .then( () =>profilesCollection.create() )
         .then(() => Promise.all(profiles.map(insertProfile)));
 }
 
