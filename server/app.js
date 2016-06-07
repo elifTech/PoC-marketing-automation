@@ -14,10 +14,6 @@ var app = {
         http: {
             port: 5000
         }
-    },
-    models: {
-        profiles: require('../data_layer/profiles'),
-        lists: require('../data_layer/lists')
     }
 };
 exports.app = app;
@@ -47,19 +43,12 @@ exports.start = function(next) {
 
     io.on('connection', function(socket){
         console.log('a user connected');
+        socket.on('disconnect', function(){
+            console.log('user disconnected');
+        });
     });
 
-    var debounceTime = 500;
 
-    var emitListsChange = _.debounce( emitListsChange =>
-        app.models.lists.getAllLists()
-            .then( (lists) => io.emit('lists change', lists) )
-    , debounceTime);
-
-    var emitProfilesChange = _.debounce( () =>
-        app.models.profiles.getAllProfiles()
-            .then( (lists) => io.emit('profiles change', lists) )
-    , debounceTime);
 
     var corsOptionsDelegate = function(req, callback){
         var corsOptions = {};
@@ -80,117 +69,10 @@ exports.start = function(next) {
         res.json({ success: true });
     });
 
-    app.server.get('/api/list', function(req, res, next){
-        app.models.lists.getAllLists()
-            .then( (profiles) => res.json({ items: profiles }) )
-            .catch( (err) =>{
-                if(err) return next(err);
-                res.statusCode(err.code || 400).send(err)
-            });
-    });
 
-    app.server.get('/api/list/:listId', function(req, res, next){
-        app.models.lists.getList(req.params.listId)
-            .then( (list) => res.json(list) )
-            .catch( (err) =>{
-                if(err) return next(err);
-                res.statusCode(err.code || 400).send(err)
-            });
-    });
+    require('../routes/lists').set(app, io);
+    require('../routes/profiles').set(app, io);
 
-    app.server.delete('/api/list/:listId', function(req, res, next){
-        app.models.lists.removeList(req.params.listId)
-            .then( (profiles) => res.send({}) )
-            .then( emitListsChange )
-            .catch( (err) =>{
-                console.log(err);
-                res.statusCode(400).send(err)
-            });
-
-    });
-
-    app.server.post('/api/list', function(req, res, next){
-        var list = req.body;
-        app.models.lists.insertList(list)
-            .then( (profile) => res.send(profile) )
-            .then( emitListsChange )
-            .catch( (err) =>{
-                console.log(err);
-                res.statusCode(400).send(err)
-            });
-
-    });
-
-    app.server.put('/api/list/:listId', function(req, res, next){
-        var list = req.body;
-        list._key = req.params.listId;
-        app.models.lists.updateList(list)
-            .then( (profile) => res.send(profile) )
-            .then( emitListsChange )
-            .catch( (err) =>{
-                console.log(err);
-                res.statusCode(400).send(err);
-            });
-
-    });
-
-
-
-    app.server.get('/api/profile', function(req, res, next){
-        app.models.profiles.getAllProfiles()
-            .then( (profiles) => res.json({ items: profiles }) )
-            .catch( (err) =>{
-                console.log(err);
-                res.statusCode(400).send(err)
-        });
-
-    });
-
-    app.server.get('/api/profile/:profileId', function(req, res, next){
-        app.models.profiles.getProfile(req.params.profileId)
-            .then( (profile) => res.json(profile) )
-            .catch( (err) =>{
-                console.log(err);
-                res.statusCode(400).send(err)
-            });
-
-    });
-
-    app.server.delete('/api/profile/:profileId', function(req, res, next){
-        app.models.profiles.removeProfile(req.params.profileId)
-            .then( (profiles) => res.send({}) )
-            .then( emitProfilesChange )
-            .catch( (err) =>{
-                console.log(err);
-                res.statusCode(400).send(err)
-            });
-
-    });
-
-    app.server.post('/api/profile', function(req, res, next){
-        var profile = req.body;
-        app.models.profiles.insertProfile(profile)
-            .then( (profile) => res.send(profile) )
-            .then( emitProfilesChange )
-            .catch( (err) =>{
-                console.log(err);
-                res.statusCode(400).send(err)
-            });
-
-    });
-
-    app.server.put('/api/profile/:profileId', function(req, res, next){
-        var profile = req.body;
-        profile._key = req.params.profileId;
-        app.models.profiles.updateProfile(profile)
-            .then( (profile) => res.send(profile) )
-            .then( emitProfilesChange )
-            .catch( (err) =>{
-                console.log(err);
-                res.statusCode(400).send(err);
-            });
-
-    });
 
     app.server.get('/*', serveStatic(__dirname + '/..', {etag: false}));
 
