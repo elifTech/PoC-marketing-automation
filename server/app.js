@@ -68,6 +68,15 @@ exports.start = function(next) {
             });
     });
 
+    app.server.get('/api/list/:listId', function(req, res, next){
+        app.models.lists.getList(req.params.listId)
+            .then( (list) => res.json(list) )
+            .catch( (err) =>{
+                if(err) return next(err);
+                res.statusCode(err.code || 400).send(err)
+            });
+    });
+
     app.server.delete('/api/list/:listId', function(req, res, next){
         app.models.lists.removeList(req.params.listId)
             .then( (profiles) => res.send({}) )
@@ -110,6 +119,16 @@ exports.start = function(next) {
                 console.log(err);
                 res.statusCode(400).send(err)
         });
+
+    });
+
+    app.server.get('/api/profile/:profileId', function(req, res, next){
+        app.models.profiles.getProfile(req.params.profileId)
+            .then( (profile) => res.json(profile) )
+            .catch( (err) =>{
+                console.log(err);
+                res.statusCode(400).send(err)
+            });
 
     });
 

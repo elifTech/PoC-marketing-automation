@@ -32,6 +32,20 @@ function getAllLists(){
         .then(cursor => cursor.all());
 }
 
+function getList(id){
+    return db.query(aql`
+        FOR l IN ${listsCollection}
+        FILTER l._key == ${id}
+        LET profiles_list = GRAPH_NEIGHBORS("lists_profiles", l, {direction: "inbound", edgeCollectionRestriction: "profiles_belongs_to_lists", includeData: true})
+          RETURN {
+            list: l,
+            profiles_list: profiles_list
+          }
+    `)
+        .then(cursor => cursor.all())
+        .then(data => data && data[0]);
+}
+
 function insertList(list){
     validate(list, listSchema, validationOptions);
     var listResult;
@@ -101,5 +115,6 @@ module.exports = {
     insertList: insertList,
     updateList: updateList,
     removeList: removeList,
+    getList: getList,
     init: init
 };

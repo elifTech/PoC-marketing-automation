@@ -25,6 +25,16 @@ function getAllProfiles(){
     .then(cursor => cursor.all() );
 }
 
+function getProfile(profileId){
+    return db.query(aql`
+        FOR profile IN ${profilesCollection}
+        FILTER profile._key == ${profileId}
+        RETURN profile
+    `)
+        .then(cursor => cursor.all() )
+        .then(data => data && data[0]);
+}
+
 function insertProfile(profile){
     validate(profile, profileSchema, validationOptions);
     return db.query(aql`
@@ -74,5 +84,6 @@ module.exports = {
     insertProfile: insertProfile,
     updateProfile: updateProfile,
     removeProfile: removeProfile,
+    getProfile: getProfile,
     init: init
 };
