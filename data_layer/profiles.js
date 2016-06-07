@@ -29,7 +29,11 @@ function getProfile(profileId){
     return db.query(aql`
         FOR profile IN ${profilesCollection}
         FILTER profile._key == ${profileId}
-        RETURN profile
+        LET lists = GRAPH_NEIGHBORS("lists_profiles", profile, {direction: "outbound", edgeCollectionRestriction: "profiles_belongs_to_lists", includeData: true})
+          RETURN {
+            profile: profile,
+            lists: lists
+          }
     `)
         .then(cursor => cursor.all() )
         .then(data => data && data[0]);
