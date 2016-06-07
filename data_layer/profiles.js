@@ -11,10 +11,10 @@ var profileSchema = {
     "id": "/Profile",
     "type": "object",
     "properties": {
-        "email": {"type": "string"},
+        "email": {"type": "string", "format": "email"},
         "name": {"type": "string"}
     },
-    "required": ["email"]
+    "required": ["name", "email"]
 };
 
 function getAllProfiles(){
