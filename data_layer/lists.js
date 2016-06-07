@@ -101,9 +101,9 @@ function removeList(listId){
 
 function init(){
     var lists = [
-        { "name": "first"},
-        { "name": "second"},
-        { "name": "third"}
+        { "name": "first", profiles: []},
+        { "name": "second", profiles: []},
+        { "name": "third", profiles: []}
     ];
 
     return Promise.all([listsCollection.drop(), graph.drop()])
