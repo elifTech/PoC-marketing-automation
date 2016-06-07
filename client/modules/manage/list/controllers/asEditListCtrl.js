@@ -7,18 +7,11 @@ function($scope, $timeout, aListModel, $stateParams, aProfileModel) {
     };
     console.log('$stateParams', $stateParams);
 
-    $scope.saveItem = (listItem => {
-            console.log('listItem', listItem);
-        var sendData = {
-            name: listItem.name.$viewValue,
-            // profiles: listItem.profiles.map(profile => profile._key)
-            profiles: listItem.profiles.$viewValue
-        };
-
-        console.log('sendData', sendData);
-        // return;
+    $scope.saveItem = (valid => {
+        if(!valid) return;
+        
         $scope.loading = true;
-        var promise = aListModel.create(sendData, (response) => {
+        var promise = aListModel.create($scope.list, (response) => {
             console.log('response', response);
             $scope.$close();
             $scope.loading = false;
@@ -27,8 +20,6 @@ function($scope, $timeout, aListModel, $stateParams, aProfileModel) {
             $scope.$close();
             $scope.loading = false;
         });
-
-        console.log(listItem, 'listItem');
     });
 
     $scope.find = _id => {
@@ -43,6 +34,8 @@ function($scope, $timeout, aListModel, $stateParams, aProfileModel) {
 
     aProfileModel.get(profiles => {
         $scope.profiles = profiles.items;
+        $scope.selected = $scope.profiles[0]._key;
+
         $scope.profileMap = {};
         profiles.items.forEach(profile => {
             $scope.profileMap[profile._key] = profile;
@@ -51,12 +44,17 @@ function($scope, $timeout, aListModel, $stateParams, aProfileModel) {
 
     $scope.selecte = selected => {
         if(!selected) return;
-
         var profileIndex = $scope.list.profiles.indexOf(selected);
         if(profileIndex !== -1) return;
 
         $scope.list.profiles.push(selected);
         console.log('selected', selected);
+    };
+
+    $scope.removeProfile = profile => {
+        var profileIndex = $scope.list.profiles.indexOf(profile);
+        if(profileIndex === -1) return;
+        $scope.list.profiles.splice(profileIndex, 1);
     };
 
     if($stateParams._id) $scope.find($stateParams._id);

@@ -1,4 +1,4 @@
-<form name="listForm" model-state="error" ng-submit="saveItem(listForm)">
+<form name="listForm" model-state="error" ng-submit="saveItem(listForm.$valid)">
   <div class="modal-header page-header">
     <h3 class="modal-title" style="float: left;">{{list.name || 'New list'}}</h3>
   </div>
@@ -8,7 +8,11 @@
 
     <div class="form-group">
       <label>Profiles</label>
-      <input ng-repeat="profile in list.profiles" type="text" name="profiles" disabled class="form-control" ng-model="profileMap[profile]._key">
+      <div ng-repeat="profile in list.profiles" class="input-group">
+        <span ng-click="removeProfile(profile)" class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+        <input  type="text" name="profiles" disabled class="form-control" value="{{profileMap[profile].name}}">
+      </div>
+
 
       <select ng-model="selected">
         <option ng-repeat="profile in profiles" value="{{profile._key}}">{{profile.name}}</option>

@@ -1,29 +1,41 @@
 <form name="userForm" ng-submit="saveItem(userForm)" novalidate> <!-- novalidate prevents HTML5 validation since we will be validating ourselves -->
-
-    <!-- NAME -->
-    <div class="form-group">
-        <label>First Name</label>
-        <input type="text" name="firstname" class="form-control" ng-model="profile.firstname"  ng-minlength="2" required>
+    <div class="modal-header page-header">
+        <h3 class="modal-title" style="float: left;">{{profile.firstname || 'New profile'}}</h3>
     </div>
-    <!-- NAME -->
-    <div class="form-group">
-        <label>Last Name</label>
-        <input type="text" name="lastname" class="form-control" ng-model="profile.lastname"  ng-minlength="2" required>
+    <div class="modal-body">
+        <!-- NAME -->
+        <div class="form-group">
+            <label>First Name</label>
+            <input type="text" name="firstname" class="form-control" ng-model="profile.firstname"  ng-minlength="2" required>
+        </div>
+        <!-- NAME -->
+        <div class="form-group">
+            <label>Last Name</label>
+            <input type="text" name="lastname" class="form-control" ng-model="profile.lastname"  ng-minlength="2" required>
+        </div>
+
+        <!-- USERNAME -->
+        <div class="form-group clearfix">
+            <label>Interests</label>
+            <div>
+                <a class="btn btn-success" ng-click="removeInterest(interest)" ng-repeat="interest in profile.interests" href="#" role="button">{{interest}}</a>
+            </div>
+            <div class="col-xs-4 input-group">
+                <span class="input-group-addon" ng-click="addInterest(interest)">+</span>
+                <input type="text" name="interests" class="interests form-control" ng-model="interest" placeholder="your interest">
+            </div>
+        </div>
+
+        <!-- EMAIL -->
+        <div class="form-group">
+            <label>Email</label>
+            <input type="email" name="email" class="form-control" required ng-model="profile.email">
+        </div>
     </div>
+    <div class="modal-footer">
+        <!-- SUBMIT BUTTON -->
+        <button type="submit" class="btn btn-primary" ng-disabled="!userForm.$valid">Submit</button>
 
-    <!-- USERNAME -->
-    <div class="form-group">
-        <label>Interests</label>
-        <input type="text" name="interests" class="form-control" ng-model="profile.interests" ng-minlength="3">
+        <button class="btn btn-secondary" type="button" ng-click="$close()">Close</button>
     </div>
-
-    <!-- EMAIL -->
-    <div class="form-group">
-        <label>Email</label>
-        <input type="email" name="email" class="form-control" required ng-model="profile.email">
-    </div>
-
-    <!-- SUBMIT BUTTON -->
-    <button type="submit" class="btn btn-primary" ng-disabled="!userForm.$valid">Submit</button>
-
 </form>

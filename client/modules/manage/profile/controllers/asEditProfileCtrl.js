@@ -38,5 +38,18 @@ function($scope, $timeout, aProfileModel, $stateParams) {
         });
     };
 
+    $scope.addInterest = interest => {
+        if(!$scope.profile.interests) $scope.profile.interests = [];
+
+        var isInList = $scope.profile.interests.indexOf(interest);
+        if(isInList !== -1) return;
+        $scope.profile.interests.push(interest);
+    }
+    $scope.removeInterest = interest => {
+        var index = $scope.profile.interests.indexOf(interest);
+        if(index === -1) return;
+        $scope.profile.interests.splice(index, 1);
+    }
+
     if($stateParams._id) $scope.find($stateParams._id);
 }
