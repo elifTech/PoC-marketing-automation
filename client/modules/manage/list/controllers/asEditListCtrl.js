@@ -31,7 +31,7 @@ function($scope, $timeout, aListModel, $stateParams, aProfileModel) {
     $scope.find = _id => {
         aListModel.get({listId: _id},
         response => {
-            response.list.profiles = response.list.profiles || [];
+            response.list.profiles = (response.profiles_list !== undefined) ? response.profiles_list.map(profile => profile._key) : [];
             $scope.list = response.list;
         },
         err => {
