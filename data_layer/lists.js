@@ -60,9 +60,9 @@ function insertList(list){
         .then(cursor => cursor.all() )
         .then(data => {
             listResult = data[0];
-            return Promise.all(profileKeys.map((profileKey) => {
-                return edges.save({_from: "profiles/" + profileKey, _to: listResult._id});
-            }))
+            return edges.remove({_to: listResult._id})
+                .then((a) => { console.log(a); Promise.all(profileKeys.map((profileKey) => edges.save({_from: "profiles/" + profileKey, _to: listResult._id})));
+                })
         })
         .then(() => listResult);
 }
@@ -82,9 +82,14 @@ function updateList(list){
         .then(cursor => cursor.all() )
         .then(data => {
             listResult = data[0];
-            return Promise.all(profileKeys.map((profileKey) => {
-                return edges.save({_from: "profiles/" + profileKey, _to: listResult._id});
-            }))
+            return db.query(aql`
+                FOR l IN profiles_belongs_to_lists
+                FILTER l._to == ${listResult._id}
+                REMOVE l._key IN profiles_belongs_to_lists
+            `)
+                .then(() => Promise.all(profileKeys.map(
+                    (profileKey) => edges.save({_from: "profiles/" + profileKey, _to: listResult._id})
+                )))
         })
         .then(() => listResult);
 }
