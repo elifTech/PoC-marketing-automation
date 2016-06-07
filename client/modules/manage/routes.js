@@ -13,10 +13,10 @@ function($stateProvider, $urlRouterProvider) {
         .state('main.lists', {
             url: '/lists',
             resolve: {
-                // lists: (aListModel) => aListModel.get().$promise
+                lists: (aListModel) => aListModel.get().$promise
             },
             views: {
-                'main-content': {controller: 'asListCtrl', templateUrl: 'client/views/main/page.html'}
+                'main-content': {controller: 'asListCtrl', templateUrl: 'client/views/lists/page.html'}
             }
         })
         .state('main.lists.new-list', {

@@ -1,9 +1,8 @@
 export default
 /*@ngInject*/
-function($scope, $timeout, aListModel) {
+function($scope, $timeout, aListModel, lists) {
     // get sites list
-    var lists;
-    $scope.lists = lists || [];
+    $scope.lists = lists.items || [];
 
     $scope.removeList = _id => {
         aListModel.delete({listId: _id}, response => {

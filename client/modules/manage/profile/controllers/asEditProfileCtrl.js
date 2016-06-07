@@ -39,11 +39,13 @@ function($scope, $timeout, aProfileModel, $stateParams) {
     };
 
     $scope.addInterest = interest => {
+        if(!interest || !interest.length) return;
         if(!$scope.profile.interests) $scope.profile.interests = [];
 
         var isInList = $scope.profile.interests.indexOf(interest);
         if(isInList !== -1) return;
         $scope.profile.interests.push(interest);
+        interest = '';
     }
     $scope.removeInterest = interest => {
         var index = $scope.profile.interests.indexOf(interest);
