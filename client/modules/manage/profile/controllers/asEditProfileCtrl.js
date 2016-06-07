@@ -5,19 +5,16 @@ function($scope, $timeout, aProfileModel, $stateParams) {
     console.log('$stateParams', $stateParams);
 
     $scope.saveItem = (profile => {
-        var sendData = {
-            name: profile.firstname.$viewValue + " " + profile.lastname.$viewValue,
-            email: profile.email.$viewValue,
-            interests: profile.interests.$viewValue
-        };
-
-        console.log('sendData', sendData);
-
+        $scope.profile.name = $scope.profile.firstname + " " + $scope.profile.lastname;
+        
         var saveMethod = aProfileModel.create;
-        if($scope.profile._key) saveMethod = aProfileModel.save;
+        if($scope.profile._key) {
+            $scope.profile.profileId = $scope.profile._key;
+            saveMethod = aProfileModel.save;
+        }
 
         $scope.loading = true;
-        saveMethod(sendData, (response) => {
+        saveMethod($scope.profile, (response) => {
             console.log('response', response);
             $scope.$close();
             $scope.loading = false;
@@ -31,6 +28,11 @@ function($scope, $timeout, aProfileModel, $stateParams) {
     $scope.find = _id => {
         aProfileModel.get({profileId: _id},
         response => {
+            var userName = response.name.split(" ");
+            response.firstname = userName[0];
+            response.lastname = userName[1];
+            console.log('response.interests', response.interests);
+            response.interests = response.interests || []
             $scope.profile = response;
         },
         err => {

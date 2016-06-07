@@ -9,9 +9,15 @@ function($scope, $timeout, aListModel, $stateParams, aProfileModel) {
 
     $scope.saveItem = (valid => {
         if(!valid) return;
-        
-        $scope.loading = true;
-        var promise = aListModel.create($scope.list, (response) => {
+
+    var saveMethod = aListModel.create;
+    if($scope.list._key) {
+        $scope.list._id = $scope.list._key;
+        saveMethod = aListModel.save;
+    }
+
+    $scope.loading = true;
+        saveMethod($scope.list, (response) => {
             console.log('response', response);
             $scope.$close();
             $scope.loading = false;
@@ -23,9 +29,10 @@ function($scope, $timeout, aListModel, $stateParams, aProfileModel) {
     });
 
     $scope.find = _id => {
-        aListModel.get({_id: _id},
+        aListModel.get({listId: _id},
         response => {
-            $scope.listItem = response;
+            response.list.profiles = response.list.profiles || [];
+            $scope.list = response.list;
         },
         err => {
             console.log('error on get list', err);
@@ -43,6 +50,7 @@ function($scope, $timeout, aListModel, $stateParams, aProfileModel) {
     });
 
     $scope.selecte = selected => {
+        if(!$scope.list.profiles) $scope.list.profiles = [];
         if(!selected) return;
         var profileIndex = $scope.list.profiles.indexOf(selected);
         if(profileIndex !== -1) return;

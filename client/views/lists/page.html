@@ -21,7 +21,7 @@
     <tbody>
     <tr ng-repeat="list in lists track by $index">
         <td>
-            <a href="#" ui-sref="main.lists.new-list({ listId: list.list._key })">{{list.list.name}}</a>
+            <a href="#" ui-sref="main.lists.new-list({ _id: list.list._key })">{{list.list.name}}</a>
         </td>
         <td>
             <a href="#" ui-sref="removeList(list.list._key)">Remove</a>
