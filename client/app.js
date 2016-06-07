@@ -12,16 +12,6 @@ try {
 
 window.config = config;
 
-var socket = io();
-
-socket.on('lists change', function(newData){
-    console.log('lists change');
-});
-
-socket.on('profiles change', function(newData){
-    console.log('profiles change');
-});
-
 angular.module(appName, [base].concat(modules));
 
 export default appName;

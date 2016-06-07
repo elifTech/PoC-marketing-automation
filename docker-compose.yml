@@ -1,0 +1,28 @@
+mongo:
+  image: mongo:3.0.4
+  ports:
+    - "27017:27017"
+  command: --smallfiles --rest
+rabbitmq:
+  image: resilva87/docker-rabbitmq-stomp:latest
+  ports:
+    - "61613:61613"
+    - "15672:15672"
+  environment:
+    - RABBITMQ_USER=root
+    - RABBITMQ_PASS=123456
+web:
+  #image: polluxx/paphos-analytics
+  volumes:
+  - .:/src
+  build: .
+  #ports:
+  #  - "5000:5000"
+  links:
+    - mongo
+    - rabbitmq
+  environment:
+    - RABBITMQ_USER=root
+    - RABBITMQ_PASS=123456
+    - "ANALYTICS_SERVICE_URL=http://localhost:5000"
+    - "ANALYTICS_SERVICE_API_URL=http://localhost:5000/api"

@@ -4,6 +4,15 @@ function($scope, profiles, $timeout, aProfileModel) {
     // get sites list
     $scope.profiles = profiles.items || [];
 
+    var socket = io();
+
+    socket.on('profiles change', function(newData){
+        $scope.profiles = newData;
+        $scope.$apply();
+        console.log('profiles change', newData);
+    });
+    
+    
     console.log('$scope.profiles', $scope.profiles);
 
     $scope.removeProfile = _id => {

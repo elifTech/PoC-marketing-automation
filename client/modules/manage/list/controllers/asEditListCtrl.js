@@ -15,7 +15,7 @@ function($scope, $timeout, aListModel, $stateParams, aProfileModel) {
         $scope.list._id = $scope.list._key;
         saveMethod = aListModel.save;
     }
-
+    console.log('$scope.list', $scope.list);
     $scope.loading = true;
         saveMethod($scope.list, (response) => {
             console.log('response', response);
