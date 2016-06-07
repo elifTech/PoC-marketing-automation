@@ -60,9 +60,7 @@ function insertList(list){
         .then(cursor => cursor.all() )
         .then(data => {
             listResult = data[0];
-            return edges.remove({_to: listResult._id})
-                .then((a) => { console.log(a); Promise.all(profileKeys.map((profileKey) => edges.save({_from: "profiles/" + profileKey, _to: listResult._id})));
-                })
+            return Promise.all(profileKeys.map((profileKey) => edges.save({_from: "profiles/" + profileKey, _to: listResult._id})));
         })
         .then(() => listResult);
 }
