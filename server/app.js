@@ -5,7 +5,8 @@ var express = require('express'),
     cors = require('cors'),
     bodyParser = require('body-parser'),
     serveStatic = require('serve-static'),
-    async = require('async');
+    async = require('async'),
+    _ = require('lodash');
 
 
 var app = {
@@ -37,15 +38,28 @@ exports.init = function (next) {
     });
 };
 
+
 exports.start = function(next) {
     app.server = express();
     app.httpServer = http.createServer(app.server);
 
     var io = require('socket.io')(app.httpServer);
-    
+
     io.on('connection', function(socket){
         console.log('a user connected');
     });
+
+    var debounceTime = 500;
+
+    var emitListsChange = _.debounce( emitListsChange =>
+        app.models.lists.getAllLists()
+            .then( (lists) => io.emit('lists change', lists) )
+    , debounceTime);
+
+    var emitProfilesChange = _.debounce( () =>
+        app.models.profiles.getAllProfiles()
+            .then( (lists) => io.emit('profiles change', lists) )
+    , debounceTime);
 
     var corsOptionsDelegate = function(req, callback){
         var corsOptions = {};
@@ -87,6 +101,7 @@ exports.start = function(next) {
     app.server.delete('/api/list/:listId', function(req, res, next){
         app.models.lists.removeList(req.params.listId)
             .then( (profiles) => res.send({}) )
+            .then( emitListsChange )
             .catch( (err) =>{
                 console.log(err);
                 res.statusCode(400).send(err)
@@ -98,6 +113,7 @@ exports.start = function(next) {
         var list = req.body;
         app.models.lists.insertList(list)
             .then( (profile) => res.send(profile) )
+            .then( emitListsChange )
             .catch( (err) =>{
                 console.log(err);
                 res.statusCode(400).send(err)
@@ -110,6 +126,7 @@ exports.start = function(next) {
         list._key = req.params.listId;
         app.models.lists.updateList(list)
             .then( (profile) => res.send(profile) )
+            .then( emitListsChange )
             .catch( (err) =>{
                 console.log(err);
                 res.statusCode(400).send(err);
@@ -142,6 +159,7 @@ exports.start = function(next) {
     app.server.delete('/api/profile/:profileId', function(req, res, next){
         app.models.profiles.removeProfile(req.params.profileId)
             .then( (profiles) => res.send({}) )
+            .then( emitProfilesChange )
             .catch( (err) =>{
                 console.log(err);
                 res.statusCode(400).send(err)
@@ -153,6 +171,7 @@ exports.start = function(next) {
         var profile = req.body;
         app.models.profiles.insertProfile(profile)
             .then( (profile) => res.send(profile) )
+            .then( emitProfilesChange )
             .catch( (err) =>{
                 console.log(err);
                 res.statusCode(400).send(err)
@@ -165,6 +184,7 @@ exports.start = function(next) {
         profile._key = req.params.profileId;
         app.models.profiles.updateProfile(profile)
             .then( (profile) => res.send(profile) )
+            .then( emitProfilesChange )
             .catch( (err) =>{
                 console.log(err);
                 res.statusCode(400).send(err);
