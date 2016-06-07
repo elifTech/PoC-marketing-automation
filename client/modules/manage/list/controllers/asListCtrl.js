@@ -1,10 +1,8 @@
 export default
 /*@ngInject*/
-function($scope, $timeout, aListModel, lists) {
+function($scope, $timeout, aListModel, lists, socket) {
     // get sites list
     $scope.lists = lists.items || [];
-
-    var socket = io();
 
     socket.on('lists change', function(newData){
         $scope.lists = newData;

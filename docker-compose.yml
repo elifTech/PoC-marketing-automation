@@ -1,28 +1,17 @@
-mongo:
-  image: mongo:3.0.4
+arangodb:
+  image: arangodb/arangodb:2.8.9
   ports:
-    - "27017:27017"
-  command: --smallfiles --rest
-rabbitmq:
-  image: resilva87/docker-rabbitmq-stomp:latest
-  ports:
-    - "61613:61613"
-    - "15672:15672"
+    - "8529:8529"
   environment:
-    - RABBITMQ_USER=root
-    - RABBITMQ_PASS=123456
+    - ARANGO_NO_AUTH=true
 web:
-  #image: polluxx/paphos-analytics
-  volumes:
-  - .:/src
-  build: .
-  #ports:
-  #  - "5000:5000"
+  image: polluxx/poc-marketing-automation
+  #build: .
+  ports:
+    - "5000:5000"
   links:
-    - mongo
-    - rabbitmq
+    - arangodb
   environment:
-    - RABBITMQ_USER=root
-    - RABBITMQ_PASS=123456
-    - "ANALYTICS_SERVICE_URL=http://localhost:5000"
-    - "ANALYTICS_SERVICE_API_URL=http://localhost:5000/api"
+    - ARANGO_NO_AUTH=true
+    - "SERVICE_URL=http://localhost:5000"
+    - "SERVICE_API_URL=http://localhost:5000/api"

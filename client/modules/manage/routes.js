@@ -1,6 +1,9 @@
 export default
 /*@ngInject*/
 function($stateProvider, $urlRouterProvider) {
+
+    var socket = io();
+
     $stateProvider
         .state('main', {
             parent: 'private',
@@ -13,7 +16,8 @@ function($stateProvider, $urlRouterProvider) {
         .state('main.lists', {
             url: '/lists',
             resolve: {
-                lists: (aListModel) => aListModel.get().$promise
+                lists: (aListModel) => aListModel.get().$promise,
+                socket: () => socket
             },
             views: {
                 'main-content': {controller: 'asListCtrl', templateUrl: 'client/views/lists/page.html'}
@@ -35,7 +39,8 @@ function($stateProvider, $urlRouterProvider) {
         .state('main.profile', {
             url: '/profiles',
             resolve: {
-                profiles: (aProfileModel) => aProfileModel.get().$promise
+                profiles: (aProfileModel) => aProfileModel.get().$promise,
+                socket: () => socket
             },
             views: {
                 'main-content': {controller: 'asProfilesCtrl', templateUrl: 'client/views/profile/list.html'}

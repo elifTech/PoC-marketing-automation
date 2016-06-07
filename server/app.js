@@ -21,17 +21,8 @@ exports.app = app;
 exports.init = function (next) {
     var startDate = Date.now();
 
-    async.auto({
-        'db': function (next) {
-            console.info('Connecting to DB...');
-            next();
-        }
-    }, function (err) {
-        if (err) { return next(err); }
-
-        console.info('Configuration successfully loaded in', Date.now() - startDate, 'ms');
-        next();
-    });
+    console.info('Configuration successfully init in', Date.now() - startDate, 'ms');
+    next();
 };
 
 
@@ -82,26 +73,6 @@ exports.start = function(next) {
 
             console.log({err: {name: err.name, stack: err.stack}}, err.message);
             return res.status(400).json({msg: err.message});
-            //if (err.name === app.errors.NotFoundError.name) {
-            //    var resultErr = {msg: err.message};
-            //    if (isDev) {
-            //        resultErr.stack = err.stack;
-            //    }
-            //    return res.status(404).json(resultErr);
-            //} else if (err.name === app.errors.ValidationError.name) {
-            //    var r = {hasErrors: true};
-            //    if (err.field) {
-            //        r.fieldErrors = [{field: err.field, msg: err.msg}];
-            //    } else {
-            //        r.summaryErrors = [{msg: err.msg}];
-            //    }
-            //    return res.status(422).json(r);
-            //} else if (err.name === app.errors.OperationError.name) {
-            //    return res.status(400).json({msg: err.message});
-            //} else if (err.name === 'Error') {
-            //    return res.status(500).json({errors: err.errors, code: err.code});
-            //}
-            return next(err);
         }
         next();
     });
