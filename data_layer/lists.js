@@ -50,6 +50,8 @@ function insertList(list){
     validate(list, listSchema, validationOptions);
     var listResult;
     var profileKeys = list.profiles;
+    delete list.profiles;
+
     return db.query(aql`
         INSERT ${list}
         IN ${listsCollection}
@@ -67,6 +69,8 @@ function insertList(list){
 
 function updateList(list){
     validate(list, listSchema, validationOptions);
+    delete list.profiles;
+
     return db.query(aql`
         UPDATE {_key: ${list._key}}
         WITH ${list}
